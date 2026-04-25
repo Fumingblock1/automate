@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Sales Leads{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>👥 Sales Leads</h1>
+    <p>Track and manage your potential customers</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- ADD LEAD FORM -->
+    <div class="form-card">
+      <h2>Add New Lead</h2>
+      <form action="/leads/add" method="POST">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="e.g. John Smith" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="e.g. john@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="phone" placeholder="e.g. (734) 555-0123">
+          </div>
+          <div class="form-group">
+            <label>Car Interest</label>
+            <input type="text" name="interest" placeholder="e.g. 2022 Toyota Camry">
+          </div>
+          <div class="form-group">
+            <label>Budget ($)</label>
+            <input type="number" name="budget" placeholder="e.g. 25000">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status">
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="negotiating">Negotiating</option>
+              <option value="closed">Closed</option>
+              <option value="lost">Lost</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Follow Up Date</label>
+            <input type="date" name="follow_up">
+          </div>
+          <div class="form-group form-full">
+            <label>Notes</label>
+            <textarea name="notes" placeholder="Any notes about this lead..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Lead</button>
+      </form>
+    </div>
+
+    <!-- LEADS LIST -->
+    <h2 class="section-title">All Leads ({{ leads|length }})</h2>
+    <div class="table-card">
+      {% if leads %}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Interest</th>
+            <th>Budget</th>
+            <th>Follow Up</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in leads %}
+          <tr>
+            <td>{{ lead.name }}</td>
+            <td>{{ lead.email }}</td>
+            <td>{{ lead.phone }}</td>
+            <td>{{ lead.interest }}</td>
+            <td>${{ "{:,.0f}".format(lead.budget or 0) }}</td>
+            <td>{{ lead.follow_up or "—" }}</td>
+            <td><span class="badge badge-{{ lead.status }}">{{ lead.status }}</span></td>
+            <td><a href="/leads/delete/{{ lead.id }}" class="btn-delete" onclick="return confirm('Remove this lead?')">Remove</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty">No leads yet. Add your first lead above!</p>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

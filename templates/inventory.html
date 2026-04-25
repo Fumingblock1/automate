@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Inventory{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>🚗 Car Inventory</h1>
+    <p>Manage your dealership stock</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- ADD CAR FORM -->
+    <div class="form-card">
+      <h2>Add New Car</h2>
+      <form action="/inventory/add" method="POST">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Make</label>
+            <input type="text" name="make" placeholder="e.g. Toyota" required>
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <input type="text" name="model" placeholder="e.g. Camry" required>
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input type="number" name="year" placeholder="e.g. 2021" required>
+          </div>
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input type="number" name="price" placeholder="e.g. 25000" required>
+          </div>
+          <div class="form-group">
+            <label>Mileage</label>
+            <input type="number" name="mileage" placeholder="e.g. 35000" required>
+          </div>
+          <div class="form-group">
+            <label>Color</label>
+            <input type="text" name="color" placeholder="e.g. Silver" required>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status">
+              <option value="available">Available</option>
+              <option value="sold">Sold</option>
+              <option value="reserved">Reserved</option>
+            </select>
+          </div>
+          <div class="form-group form-full">
+            <label>Description</label>
+            <textarea name="description" placeholder="Any additional details..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Car</button>
+      </form>
+    </div>
+
+    <!-- CAR LIST -->
+    <h2 class="section-title">Current Stock ({{ cars|length }} cars)</h2>
+    <div class="table-card">
+      {% if cars %}
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Price</th>
+            <th>Mileage</th>
+            <th>Color</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for car in cars %}
+          <tr>
+            <td>{{ car.year }}</td>
+            <td>{{ car.make }}</td>
+            <td>{{ car.model }}</td>
+            <td>${{ "{:,.0f}".format(car.price) }}</td>
+            <td>{{ "{:,}".format(car.mileage) }} mi</td>
+            <td>{{ car.color }}</td>
+            <td><span class="badge badge-{{ car.status }}">{{ car.status }}</span></td>
+            <td><a href="/inventory/delete/{{ car.id }}" class="btn-delete" onclick="return confirm('Remove this car?')">Remove</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty">No cars in inventory yet. Add your first car above!</p>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

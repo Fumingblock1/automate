@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Welcome to AutoMate{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero-home">
+  <div class="hero-home-content">
+    <p class="hero-tag">🚗 Ann Arbor's Smartest Car Platform</p>
+    <h1>Find Your Perfect<br><span class="accent-text">Car Today</span></h1>
+    <p class="hero-sub">Use our AI-powered tools to find, compare and finance your next car — all in one place.</p>
+    <div class="hero-btns">
+      <a href="/customer/recommender" class="btn btn-primary">Find My Car</a>
+      <a href="/customer/chatbot" class="btn btn-ghost">Chat With AI</a>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOMER TOOLS -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title" style="text-align:center; margin-bottom:0.5rem;">What Can We Help You With?</h2>
+    <p style="text-align:center; color:var(--text-muted); margin-bottom:2.5rem;">Free AI-powered tools for car buyers</p>
+
+    <div class="actions-grid">
+      <a href="/customer/recommender" class="action-card">
+        <span class="action-icon">🤖</span>
+        <h3>Find My Perfect Car</h3>
+        <p>Answer a few questions and AI recommends your ideal car</p>
+      </a>
+      <a href="/customer/compare" class="action-card">
+        <span class="action-icon">⚖️</span>
+        <h3>Compare Cars</h3>
+        <p>Side by side AI comparison of any two cars</p>
+      </a>
+      <a href="/customer/calculator" class="action-card">
+        <span class="action-icon">🧮</span>
+        <h3>Payment Calculator</h3>
+        <p>Calculate your monthly payments instantly</p>
+      </a>
+      <a href="/customer/finance" class="action-card">
+        <span class="action-icon">💳</span>
+        <h3>Finance Checker</h3>
+        <p>Check your finance eligibility in seconds</p>
+      </a>
+      <a href="/customer/chatbot" class="action-card">
+        <span class="action-icon">💬</span>
+        <h3>AI Chat Assistant</h3>
+        <p>Ask anything about cars, financing or test drives</p>
+      </a>
+      <a href="/customer/book" class="action-card">
+        <span class="action-icon">📅</span>
+        <h3>Book Test Drive</h3>
+        <p>Schedule a test drive at your convenience</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN LINK -->
+<section class="section" style="padding-top:0;">
+  <div class="container" style="text-align:center;">
+    <a href="/login" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Staff Login →</a>
+  </div>
+</section>
+
+{% endblock %}

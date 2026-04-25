@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}AI Sales Chatbot{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>💬 AI Sales Chatbot</h1>
+    <p>Chat with your AI car sales assistant</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+
+    <div class="chatbot-card">
+      <div class="chat-header">
+        <span class="chat-avatar">🤖</span>
+        <div>
+          <strong>AutoMate AI</strong>
+          <span class="chat-status">● Online</span>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-message bot">
+          <span class="chat-bubble">Hi! I'm AutoMate AI, your personal car sales assistant. I can help you find the perfect car, answer questions about financing, book test drives, and more. What can I help you with today? 🚗</span>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ask me anything about cars..." onkeydown="if(event.key==='Enter') sendMessage()">
+        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let chatHistory = [];
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message) return;
+
+  appendMessage('user', message);
+  input.value = '';
+
+  chatHistory.push({ role: 'user', content: message });
+
+  const typing = appendMessage('bot', '...');
+
+  const response = await fetch('/chatbot/message', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, history: chatHistory })
+  });
+
+  const data = await response.json();
+  typing.remove();
+
+  appendMessage('bot', data.result);
+  chatHistory.push({ role: 'assistant', content: data.result });
+}
+
+function appendMessage(role, text) {
+  const messages = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-message ${role}`;
+  div.innerHTML = `<span class="chat-bubble">${text}</span>`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  return div;
+}
+</script>
+{% endblock %}

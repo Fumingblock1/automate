@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Car Value Estimator{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>💰 Car Value Estimator</h1>
+    <p>Get an AI-powered market valuation instantly</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+
+    <div class="form-card">
+      <h2>Enter Car Details</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Make</label>
+          <input type="text" id="make" placeholder="e.g. Toyota">
+        </div>
+        <div class="form-group">
+          <label>Model</label>
+          <input type="text" id="model" placeholder="e.g. Camry">
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="year" placeholder="e.g. 2019">
+        </div>
+        <div class="form-group">
+          <label>Mileage</label>
+          <input type="number" id="mileage" placeholder="e.g. 45000">
+        </div>
+        <div class="form-group form-full">
+          <label>Condition</label>
+          <select id="condition">
+            <option value="Excellent">Excellent</option>
+            <option value="Good">Good</option>
+            <option value="Fair">Fair</option>
+            <option value="Poor">Poor</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="estimateValue()">Get AI Valuation</button>
+    </div>
+
+    <div id="result-section" class="result-card hidden">
+      <h2>💰 Valuation Result</h2>
+      <div id="result-content" class="result-content"></div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function estimateValue() {
+  const make = document.getElementById('make').value;
+  const model = document.getElementById('model').value;
+  const year = document.getElementById('year').value;
+  const mileage = document.getElementById('mileage').value;
+  const condition = document.getElementById('condition').value;
+
+  if (!make || !model || !year || !mileage) {
+    alert('Please fill in all fields!');
+    return;
+  }
+
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = 'Analyzing...';
+  btn.disabled = true;
+
+  const response = await fetch('/estimator/calculate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ make, model, year, mileage, condition })
+  });
+
+  const data = await response.json();
+  document.getElementById('result-content').innerHTML = formatResult(data.result);
+  document.getElementById('result-section').classList.remove('hidden');
+  document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+
+  btn.textContent = 'Get AI Valuation';
+  btn.disabled = false;
+}
+
+function formatResult(text) {
+  return text
+    .replace(/## (.+)/g, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^[-*] (.+)/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, match => `<ul>${match}</ul>`)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, ' ');
+}
+</script>
+{% endblock %}

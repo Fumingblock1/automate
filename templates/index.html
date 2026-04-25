@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>🚗 AutoMate Dashboard</h1>
+    <p>Your AI-powered car dealership platform</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">🚗</span>
+        <div>
+          <span class="stat-num">{{ total_cars }}</span>
+          <span class="stat-label">Total Cars</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">✅</span>
+        <div>
+          <span class="stat-num">{{ available_cars }}</span>
+          <span class="stat-label">Available</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <div>
+          <span class="stat-num">{{ total_leads }}</span>
+          <span class="stat-label">Total Leads</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔥</span>
+        <div>
+          <span class="stat-num">{{ new_leads }}</span>
+          <span class="stat-label">New Leads</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📅</span>
+        <div>
+          <span class="stat-num">{{ total_bookings }}</span>
+          <span class="stat-label">Bookings</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">⏳</span>
+        <div>
+          <span class="stat-num">{{ pending_bookings }}</span>
+          <span class="stat-label">Pending</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <h2 class="section-title">AI Tools</h2>
+    <div class="actions-grid">
+      <a href="/estimator" class="action-card">
+        <span class="action-icon">💰</span>
+        <h3>Value Estimator</h3>
+        <p>Get AI-powered car valuations instantly</p>
+      </a>
+      <a href="/compare" class="action-card">
+        <span class="action-icon">⚖️</span>
+        <h3>Compare Cars</h3>
+        <p>Side by side AI car comparison</p>
+      </a>
+      <a href="/calculator" class="action-card">
+        <span class="action-icon">🧮</span>
+        <h3>Payment Calculator</h3>
+        <p>Calculate monthly payments instantly</p>
+      </a>
+      <a href="/recommender" class="action-card">
+        <span class="action-icon">🤖</span>
+        <h3>Car Recommender</h3>
+        <p>AI recommends the perfect car</p>
+      </a>
+      <a href="/finance" class="action-card">
+        <span class="action-icon">💳</span>
+        <h3>Finance Checker</h3>
+        <p>Check finance eligibility instantly</p>
+      </a>
+      <a href="/chatbot" class="action-card">
+        <span class="action-icon">💬</span>
+        <h3>AI Chatbot</h3>
+        <p>Chat with your AI sales assistant</p>
+      </a>
+    </div>
+
+    <!-- RECENT LEADS -->
+    <h2 class="section-title">Recent Leads</h2>
+    <div class="table-card">
+      {% if recent_leads %}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Interest</th>
+            <th>Budget</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in recent_leads %}
+          <tr>
+            <td>{{ lead.name }}</td>
+            <td>{{ lead.email }}</td>
+            <td>{{ lead.interest }}</td>
+            <td>${{ lead.budget }}</td>
+            <td><span class="badge badge-{{ lead.status }}">{{ lead.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty">No leads yet. <a href="/leads">Add your first lead</a></p>
+      {% endif %}
+    </div>
+
+    <!-- RECENT BOOKINGS -->
+    <h2 class="section-title">Recent Bookings</h2>
+    <div class="table-card">
+      {% if recent_bookings %}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Car Interest</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in recent_bookings %}
+          <tr>
+            <td>{{ booking.name }}</td>
+            <td>{{ booking.car_interest }}</td>
+            <td>{{ booking.date }}</td>
+            <td>{{ booking.time }}</td>
+            <td><span class="badge badge-{{ booking.status }}">{{ booking.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty">No bookings yet. <a href="/bookings">Add your first booking</a></p>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

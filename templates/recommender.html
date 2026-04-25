@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Car Recommender{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>🤖 AI Car Recommender</h1>
+    <p>Answer a few questions and AI finds your perfect car</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container narrow">
+
+    <div class="form-card">
+      <h2>Tell Us About Yourself</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Your Budget ($)</label>
+          <input type="number" id="budget" placeholder="e.g. 30000">
+        </div>
+        <div class="form-group">
+          <label>Family Size</label>
+          <select id="family">
+            <option value="Single">Single</option>
+            <option value="Couple">Couple</option>
+            <option value="Small family (1-2 kids)">Small family (1-2 kids)</option>
+            <option value="Large family (3+ kids)">Large family (3+ kids)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Primary Use</label>
+          <select id="use">
+            <option value="Daily commuting">Daily commuting</option>
+            <option value="Long road trips">Long road trips</option>
+            <option value="Off-road adventures">Off-road adventures</option>
+            <option value="City driving">City driving</option>
+            <option value="Business travel">Business travel</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Lifestyle</label>
+          <select id="lifestyle">
+            <option value="Professional/Business">Professional/Business</option>
+            <option value="Outdoors/Adventure">Outdoors/Adventure</option>
+            <option value="Family oriented">Family oriented</option>
+            <option value="Eco-conscious">Eco-conscious</option>
+            <option value="Performance/Sports">Performance/Sports</option>
+          </select>
+        </div>
+        <div class="form-group form-full">
+          <label>Must Haves</label>
+          <input type="text" id="must_haves" placeholder="e.g. good fuel economy, backup camera, Apple CarPlay">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="recommendCar()">Find My Perfect Car</button>
+    </div>
+
+    <div id="result-section" class="result-card hidden">
+      <h2>🤖 AI Recommendations</h2>
+      <div id="result-content" class="result-content"></div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function recommendCar() {
+  const data = {
+    budget: document.getElementById('budget').value,
+    family: document.getElementById('family').value,
+    use: document.getElementById('use').value,
+    lifestyle: document.getElementById('lifestyle').value,
+    must_haves: document.getElementById('must_haves').value
+  };
+
+  if (!data.budget) {
+    alert('Please enter your budget!');
+    return;
+  }
+
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = 'Finding your perfect car...';
+  btn.disabled = true;
+
+  const response = await fetch('/recommender/suggest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+  document.getElementById('result-content').innerHTML = formatResult(result.result);
+  document.getElementById('result-section').classList.remove('hidden');
+  document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+
+  btn.textContent = 'Find My Perfect Car';
+  btn.disabled = false;
+}
+
+function formatResult(text) {
+  return text
+    .replace(/## (.+)/g, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^[-*] (.+)/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, match => `<ul>${match}</ul>`)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, ' ');
+}
+</script>
+{% endblock %}

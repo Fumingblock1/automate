@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Test Drive Bookings{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <h1>📅 Test Drive Bookings</h1>
+    <p>Manage your test drive appointments</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- ADD BOOKING FORM -->
+    <div class="form-card">
+      <h2>Book a Test Drive</h2>
+      <form action="/bookings/add" method="POST">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="e.g. John Smith" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="e.g. john@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="phone" placeholder="e.g. (734) 555-0123">
+          </div>
+          <div class="form-group">
+            <label>Car Interest</label>
+            <input type="text" name="car_interest" placeholder="e.g. 2022 Toyota Camry" required>
+          </div>
+          <div class="form-group">
+            <label>Preferred Date</label>
+            <input type="date" name="date" required>
+          </div>
+          <div class="form-group">
+            <label>Preferred Time</label>
+            <select name="time">
+              <option value="9:00 AM">9:00 AM</option>
+              <option value="10:00 AM">10:00 AM</option>
+              <option value="11:00 AM">11:00 AM</option>
+              <option value="12:00 PM">12:00 PM</option>
+              <option value="1:00 PM">1:00 PM</option>
+              <option value="2:00 PM">2:00 PM</option>
+              <option value="3:00 PM">3:00 PM</option>
+              <option value="4:00 PM">4:00 PM</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Book Test Drive</button>
+      </form>
+    </div>
+
+    <!-- BOOKINGS LIST -->
+    <h2 class="section-title">All Bookings ({{ bookings|length }})</h2>
+    <div class="table-card">
+      {% if bookings %}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Car Interest</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in bookings %}
+          <tr>
+            <td>{{ booking.name }}</td>
+            <td>{{ booking.email }}</td>
+            <td>{{ booking.phone }}</td>
+            <td>{{ booking.car_interest }}</td>
+            <td>{{ booking.date }}</td>
+            <td>{{ booking.time }}</td>
+            <td><span class="badge badge-{{ booking.status }}">{{ booking.status }}</span></td>
+            <td><a href="/bookings/delete/{{ booking.id }}" class="btn-delete" onclick="return confirm('Remove this booking?')">Remove</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="empty">No bookings yet. Add your first booking above!</p>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}
