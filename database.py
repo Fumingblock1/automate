@@ -1,10 +1,13 @@
 import sqlite3
+import os
+
+# Use /tmp for Vercel, local path for development
+DB_PATH = '/tmp/automate.db' if os.environ.get('VERCEL') else 'automate.db'
 
 def init_db():
-    conn = sqlite3.connect('automate.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
-    # Inventory table
     c.execute('''CREATE TABLE IF NOT EXISTS inventory (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         make TEXT NOT NULL,
@@ -18,7 +21,6 @@ def init_db():
         date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )''')
 
-    # Leads table
     c.execute('''CREATE TABLE IF NOT EXISTS leads (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -32,7 +34,6 @@ def init_db():
         date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )''')
 
-    # Bookings table
     c.execute('''CREATE TABLE IF NOT EXISTS bookings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -49,6 +50,6 @@ def init_db():
     conn.close()
 
 def get_db():
-    conn = sqlite3.connect('automate.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
